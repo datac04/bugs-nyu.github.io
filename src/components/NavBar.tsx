@@ -2,17 +2,17 @@ import { Link } from 'gatsby';
 import { Cancel, Menu } from 'iconoir-react';
 import React, { useState, useEffect } from 'react';
 import Button from './Button';
-
-type NavBarElement = React.ElementRef<'header'>;
-type NavBarProps = React.ComponentPropsWithoutRef<'header'>;
+import { useThemeContext } from './utils';
 
 const NAV_LINKS = [
   { to: '/about', value: 'About us' },
   { to: '/projects', value: 'Projects' },
   { to: '/events', value: 'Events' },
+  { to: '/alumni', value: 'Alumni' },
 ];
 
-const NavBar = React.forwardRef<NavBarElement, NavBarProps>(({ ...restProps }) => {
+function NavBar() {
+  const { currentTheme, toggleCurrentTheme } = useThemeContext();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -26,10 +26,10 @@ const NavBar = React.forwardRef<NavBarElement, NavBarProps>(({ ...restProps }) =
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
 
   return (
-    <header {...restProps}>
+    <header>
       <nav className='flex max-w-5xl mx-auto items-center justify-between flex-wrap p-8'>
         <div className='flex items-center flex-shrink-0'>
-          <Link to='/' className='text-xl font-bold'>
+          <Link to='/' className='text-xl font-bold dark:text-stone-100'>
             BUGS
           </Link>
         </div>
@@ -48,23 +48,28 @@ const NavBar = React.forwardRef<NavBarElement, NavBarProps>(({ ...restProps }) =
               <Link
                 key={value}
                 to={to}
-                className='text-zinc-800 block mb-4 md:mb-0 md:inline-block'
+                className='text-zinc-800 block mb-4 md:mb-0 md:inline-block dark:text-stone-100'
               >
                 {value}
               </Link>
             ))}
           </div>
-          <div>
+          <div className='md:flex md:flex-row gap-2'>
             <a href='https://discord.gg/75jgtXy7rz'>
-              <Button variant='primary' className='px-6'>
+              <Button variant='secondary' className='px-6'>
                 Join
               </Button>
             </a>
+            <Button variant='primary' className='pv-6' onClick={toggleCurrentTheme}>
+              {currentTheme === 'light' ? '☀️ ' : '🌙'}
+            </Button>
           </div>
         </div>
       </nav>
     </header>
   );
-});
+}
+
+NavBar.displayName = 'NavBar';
 
 export default NavBar;
